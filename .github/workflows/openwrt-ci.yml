@@ -19,7 +19,7 @@ jobs:
 
     name: Build OpenWrt firmware
 
-    runs-on: ubuntu-latest
+    #runs-on: ubuntu-latest
 
     if: github.event.repository.owner.id == github.event.sender.id
 
@@ -33,7 +33,7 @@ jobs:
       - name: Space cleanup
         env:
           DEBIAN_FRONTEND: noninteractive
-        run: |
+        #run: |
           docker rmi `docker images -q`
           sudo rm -rf /usr/share/dotnet /etc/mysql /etc/php /etc/apt/sources.list.d /usr/local/lib/android
           sudo -E apt-get -y purge azure-cli ghc* zulu* hhvm llvm* firefox google* dotnet* powershell openjdk* adoptopenjdk* mysql* php* mongodb* dotnet* moby* snapd* || true
@@ -45,21 +45,21 @@ jobs:
           df -h
 
       - name: Update feeds
-        run: |
+        #run: |
           sed -i 's/#src-git helloworld/src-git helloworld/g' ./feeds.conf.default
           ./scripts/feeds update -a
           ./scripts/feeds install -a
 
       - name: Generate configuration file
-        run: make defconfig
+        #run: make defconfig
 
       - name: Make download
-        run: |
+        #run: |
           make download -j8
           find dl -size -1024c -exec rm -f {} \;
 
       - name: Compile firmware
-        run: |
+        #run: |
           make -j$(nproc) || make -j1 V=s
           echo "======================="
           echo "Space usage:"
@@ -71,7 +71,7 @@ jobs:
           du -h --max-depth=1 ./bin
 
       - name: Prepare artifact
-        run: |
+        #run: |
           mkdir -p ./artifact/firmware
           mkdir -p ./artifact/package
           mkdir -p ./artifact/buildinfo
